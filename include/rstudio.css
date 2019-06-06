@@ -8,7 +8,7 @@ body {
 }
 
 strong {
-  font-family: 'Source Sans Pro Bold';
+  font-family: 'Source Sans Pro';
 }
 
 p, li {
@@ -114,7 +114,7 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
 }
 
 .remark-code-line-highlighted {
-  background-color: #fff;
+  background-color: rgb(238, 235, 73);
 }
 
 .remark-slide-number {

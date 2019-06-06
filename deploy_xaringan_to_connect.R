@@ -6,8 +6,10 @@ deploy_xaringan <- function(doc){
   qualified_doc <- normalizePath(doc, winslash = "/")
   app_files <-  c(
     basename(qualified_doc),
-    list.files("images", pattern = "*.png", full.names = TRUE, recursive = TRUE),
-    list.files("images", pattern = "*.gif", full.names = TRUE, recursive = TRUE),
+    list.files("images", pattern = ".*.png", full.names = TRUE, recursive = TRUE),
+    list.files("images", pattern = ".*.gif", full.names = TRUE, recursive = TRUE),
+    list.files("include", pattern = ".*.png", full.names = TRUE, recursive = TRUE),
+    list.files("include", pattern = ".*.jpg", full.names = TRUE, recursive = TRUE),
     list.files("theme", pattern = "*.png", full.names = TRUE, recursive = TRUE)
     # list.files("libs", full.names = TRUE, recursive = TRUE)
   )

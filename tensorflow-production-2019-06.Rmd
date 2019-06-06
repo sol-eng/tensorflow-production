@@ -17,7 +17,7 @@ output:
       ratio: 16:9
 resource_files:
   - include
-  - images/00
+  - images
 ---
 
 ```{r setup, include=FALSE}
@@ -46,7 +46,7 @@ To follow along and try it yourself:
 * Accessing to the Virtual Machine
 
     - Go to https://rstd.io/class
-    - Use the workshop identifier **thinkr-test**
+    - Use the workshop identifier **thinkr**
 
 * Finding the material
     - Instructions at https://github.com/sol-eng/classroom-getting-started
@@ -216,6 +216,18 @@ The objective:
 
 ---
 
+## Training the model
+
+![](images/model_1.png)
+
+---
+
+## Training the model
+
+![](images/model_2.png)
+
+---
+
 ## Deployment
 
 ![](images/workflow_deployment.png)
@@ -242,6 +254,248 @@ class: your-turn-slide
 * Deploy the model
 * Deploy an API to call the TensorFlow API
 * Consume the model
+
+
+---
+
+## Publish TensorFlow model
+
+```r
+library(rsconnect)
+
+rsconnect::deployTFModel(
+  modelDir = "saved_models",
+  appTitle = "immunotherapy",
+  forceUpdate = TRUE
+)
+```
+
+---
+
+## Your TensorFlow model is available as an API
+
+![](images/api_tensorflow.png)
+
+---
+
+## Call the API using `curl` or `httr`
+
+Use `httr::POST()` from R.
+
+```{r, eval=FALSE}
+  # transform input into flattened array
+  x_val <-
+    peptide %>%
+    pep_encode() %>%
+    array_reshape(dim = c(nrow(.), 9*20)) #<<
+
+  # construct http body
+  body <- list(instances = list( #<<
+    x_val                        #<<
+  ))                             #<<
+
+  # make http request
+  r <- POST(api_url, body = body, encode = "json", content_type_json()) #<<
+
+  # check for errors
+  if (httr::http_error(r)){
+    cat(http_status(r))
+    stop(http_status(r))
+  }
+```
+
+---
+
+## Using the `config` package
+
+Use the `config` package to store variables that depend on your enviroment.
+
+https://github.com/rstudio/config
+
+
+.pull-left[
+**config.yml**
+
+```yaml
+default:
+  trials: 5
+  dataset: "data-sampled.csv"
+  
+production:
+  trials: 30
+  dataset: "data.csv"
+```
+]
+
+.pull-right[
+**R**
+
+```r
+config <- config::get()
+config$trials
+config$dataset
+```
+]
+
+
+---
+
+## How does the function know where the API is?
+
+
+
+**config.yml**
+
+```yaml
+default:
+  solo_url_tensorflow: "http://*****.amazonaws.com/rsconnect/content/2"
+  solo_url_plumber:    "http://*****.amazonaws.com/rsconnect/content/3"
+
+colorado:
+  solo_url_tensorflow: "https://colorado.rstudio.com/rsc/content/2328/"
+  solo_url_plumber:    "https://colorado.rstudio.com/rsc/content/2337/"
+```
+
+**plumber/3_consume_tf_api.R**
+
+```{r, eval=FALSE}
+...
+predict_peptide_class_fun <- function(
+    peptide, 
+    solo_url = config::get("solo_url_tensorflow")) #<<
+{
+  ...
+}
+    
+```
+
+
+
+
+---
+
+## Turning any R function into an API using `plumber`
+
+https://www.rplumber.io/
+
+![](images/female_plumber.png)
+
+---
+
+## Decorate your code to specify the API
+
+```{r, eval=FALSE}
+{{
+#* @apiTitle Immunotherapy
+
+#* Predict peptide class
+#* @param peptide Character vector with a single peptide, eg. `"LLTDAQRIV"` or comma separated, e.g. `"LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV, RQFTCMIAV"`
+#* @get /predict
+}}
+function(peptide, solo_url){
+  if (missing(solo_url) || is.null(solo_url)) {
+    solo_url <- config::get("solo_url_tensorflow") # TensorFlow API
+  }
+
+  # split on commas and remove white space
+  peptide <- trimws(strsplit(peptide, ",")[[1]])
+
+  predict_peptide_class_fun(peptide = peptide, solo_url = solo_url)
+}
+```
+
+---
+
+## Publish API
+
+```r
+library(rsconnect)
+
+withr::with_dir(
+  "plumber",
+
+  rsconnect::deployAPI(
+    api = ".",
+    # server = "{server}",     # <<- edit this line if necessary
+    # account = "{account}",   # <<- edit this line if necessary
+    appTitle = "immunotherapy_api",
+    forceUpdate = TRUE
+  )
+)
+```
+
+---
+
+## Your `plumber` API is available as swagger
+
+![](images/api_swagger.png)
+
+---
+
+## Use `httr` to call an API
+
+Making the `GET` call
+
+```{r, eval=FALSE}
+# Call the API
+r <- GET(api_url, query = list(peptide = peptide), #<<
+         encode = "json", content_type_json())     #<<
+
+# Error checking
+if (httr::http_error(r)){
+  cat(http_status(r))
+  stop(http_status(r))
+}
+```
+
+
+---
+
+## Check for errors
+
+Check for errors using `httr::http_error()`:
+
+```{r, eval=FALSE}
+# Call the API
+r <- GET(api_url, query = list(peptide = peptide),
+         encode = "json", content_type_json())
+
+# Error checking
+if (httr::http_error(r)){ #<<
+  cat(http_status(r))
+  stop(http_status(r))
+}
+```
+
+---
+
+## Consuming the plumber API
+
+```{r, eval=FALSE}
+library(httr)
+library(purrr)
+
+predict_peptide <- function(peptide, solo_url = config::get("solo_url_plumber")){
+  if (substring(solo_url, nchar(solo_url)) != "/") solo_url <- paste0(solo_url, "/")
+
+  if(length(peptide > 1)) peptide <- paste(peptide, collapse = ",")
+
+  api_url <- paste0(solo_url, "/predict")
+
+  r <- GET(api_url, query = list(peptide = peptide), encode = "json", content_type_json())
+  if (httr::http_error(r)){
+    cat(http_status(r))
+    stop(http_status(r))
+  }
+
+  rc <- content(r)
+
+  map_dfr(
+    rc,
+    ~as.data.frame(., stringsAsFactors = FALSE)
+  )
+}
+```
 
 ---
 class: panel-wide-slide
