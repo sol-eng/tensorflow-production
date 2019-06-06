@@ -1,0 +1,267 @@
+---
+title: "Deploying TensorFlow models and APIs to Production"
+subtitle: "ThinkR / RStudio, Paris"
+author: "Andrie de Vries"
+date: "2019-06-06"
+output:  
+  xaringan::moon_reader:
+    lib_dir: libs
+    css:
+    - include/custom.css
+    - include/rstudio.css
+    - theme/speech-bubble.css
+    nature:
+      countIncrementalSlides: yes
+      highlightLines: yes
+      highlightStyle: github
+      ratio: 16:9
+resource_files:
+  - include
+  - images/00
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+
+
+# Outline
+
+Taking TensorFlow into Production
+
+* Data science and machine learning with R
+
+* TensorFlow
+
+* Challenges of production deployment
+
+
+---
+
+# But first
+
+To follow along and try it yourself:
+
+* Accessing to the Virtual Machine
+
+    - Go to https://rstd.io/class
+    - Use the workshop identifier **thinkr-test**
+
+* Finding the material
+    - Instructions at https://github.com/sol-eng/classroom-getting-started
+    
+    - Immunotherapy repo at https://github.com/sol-eng/immunotherapy
+    
+    - This presentation at https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/
+
+---
+class: white-slide
+
+# TensorFlow
+
+.center[
+<img src="images/tensorflow-logo-large.png" height=500px;/>
+]
+
+
+---
+
+## A general purpose numerical computing library
+
+.pull-left[
+-  Originally developed by researchers and engineers working on the Google Brain Team for the purposes of conducting machine learning and deep neural networks research.
+- Open source software
+- Hardware independent
+    - CPU (via [Eigen](http://eigen.tuxfamily.org/) and [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms))
+    - GPU (via [CUDA](https://en.wikipedia.org/wiki/CUDA) and [cuDNN](https://developer.nvidia.com/cudnn))
+    - TPU ([Tensor Processing Unit](https://en.wikipedia.org/wiki/Tensor_processing_unit))
+- Distributed execution and large datasets
+]
+.pull-right[
+<img src="images/tensors_flowing.gif"/>
+]
+
+
+---
+
+## What is deep learning?
+
+Input to output via layers of representation
+
+<img src="images/a_deep_network.png"/>
+
+
+---
+
+## Layers of representation
+
+<img src="images/mnist_representations.png" height=500px;/>
+ 
+
+
+
+---
+
+class: subtitle-slide, white, center, middle
+
+
+# Problem description: Peptide classification
+
+---
+
+class: white-slide
+
+## About peptides
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Peptide)
+
+> Peptides (from Greek language πεπτός, peptós "digested"; derived from πέσσειν, péssein "to digest") are short chains of amino acid monomers linked by peptide (amide) bonds.
+
+.center[
+<img src="images/tetrapeptide_formula_wikipedia.png" width="400px" />
+]
+
+
+The package `PepTools` is
+
+> "An R-package for making immunoinformatics accessible". 
+
+---
+
+## Convert peptide to numeric representation
+
+
+```{r, eval=FALSE}
+library(PepTools)
+library(magrittr)
+pep_encode("LLTDAQRIV")[1, , ] %>% rasterImage()
+```
+
+
+```{r echo=FALSE, fig.height=6}
+suppressPackageStartupMessages({
+  library(PepTools, quietly = TRUE)
+  library(magrittr, quietly = TRUE)
+})
+
+#' Use palette from ColorBrewer to recolour the image
+#'
+#' @param x Matrix
+#' @param palette ColorBrewer palette. This value is passed to [scales::col_numeric()]
+#' @param zero_colour Colour to use for zero and NA values
+#' @param invert If `TRUE`, inverts the colour scale
+recolour <- function(x, palette = "Blues"){
+  dims <- dim(x)
+  col_range <- range(x, na.rm = TRUE)
+  col_custom <- scales::col_numeric(
+    palette = palette, domain = col_range
+  )
+  as.raster(matrix(col_custom(x), nrow = dims[1], ncol = dims[2]))
+}
+
+# Plot peptide representation
+plot_peptide <- function(x, palette = "Blues"){
+  
+  plot.new()
+  x %>% 
+    pep_encode() %>%
+    .[1, , ] %>% 
+    recolour(palette = palette) %>% 
+    rasterImage(0, 0, 1, 1, interpolate = FALSE)
+  title(paste0("Peptide representation of ", x))
+}
+
+plot_peptide("LLTDAQRIV")
+
+```
+
+
+---
+
+## Why should you care?
+
+The machine learning task is quite simple, but also a good example of an extremely common modeling task:
+
+* Predict the class of an observation, based on some features of this observation
+* In the case of the peptides example, the observation is a text string, which is expanded into a 9x20 tensor, and the task is a ulti-class classification.
+
+Many other problems are very similar, for example:
+
+* Binary classificiation of credit card default
+* Multi-class classification of images
+* Preduction of customer churn (binary class)
+
+In the case of the peptides, the modeling task is very simple, allowing the focus on the overall production deployment process.  In many real-world situations the modeling task is likely to be much more complex.
+
+---
+
+class: panel-wide-slide
+
+# Workflow
+
+The objective:
+
+* Train a TensorFlow model
+  - Given some input, predict the class
+  
+* Deploy the model to a production server
+* Get a prediction from the server
+
+---
+
+## Objective
+
+![](images/workflow_objective.png)
+
+---
+
+## Deployment
+
+![](images/workflow_deployment.png)
+
+
+---
+
+class: panel-narrow-slide
+
+## Deployment with RStudio Connect
+
+.center[
+<img src="images/rstudio-connect.png" height=400/>
+]
+
+
+---
+
+class: your-turn-slide
+
+# Demo
+
+* Train a TensorFlow model
+* Deploy the model
+* Deploy an API to call the TensorFlow API
+* Consume the model
+
+---
+class: panel-wide-slide
+
+# Thank you! 
+
+
+
+<img src="images/r-logo.png" width=100/> <img src="images/tensorflow-logo.png" width=100 style="margin-left: 20px; ma"/> 
+
+
+
+.smaller[
+Slides:
+
+<https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/>
+
+
+Subscribe to the blog to stay up to date!
+
+
+<https://tensorflow.rstudio.com/blog/>
+]

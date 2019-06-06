@@ -1,2 +1,2 @@
-# tensorflow-production-2019-06
-Using RStudio Connect to deploy TensorFlow models and plumber APIs
+# TensorFlow-Production-EARL-2018
+Taking TensorFlow into Production

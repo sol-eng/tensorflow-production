@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Deploying TensorFlow models and APIs to Production</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Andrie de Vries" />
+    <meta name="date" content="2019-06-06" />
+    <link rel="stylesheet" href="include\custom.css" type="text/css" />
+    <link rel="stylesheet" href="include\rstudio.css" type="text/css" />
+    <link rel="stylesheet" href="theme\speech-bubble.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Deploying TensorFlow models and APIs to Production
+## ThinkR / RStudio, Paris
+### Andrie de Vries
+### 2019-06-06
+
+---
+
+
+
+
+
+
+# Outline
+
+Taking TensorFlow into Production
+
+* Data science and machine learning with R
+
+* TensorFlow
+
+* Challenges of production deployment
+
+
+---
+
+# But first
+
+To follow along and try it yourself:
+
+* Accessing to the Virtual Machine
+
+    - Go to https://rstd.io/class
+    - Use the workshop identifier **thinkr-test**
+
+* Finding the material
+    - Instructions at https://github.com/sol-eng/classroom-getting-started
+    
+    - Immunotherapy repo at https://github.com/sol-eng/immunotherapy
+    
+    - This presentation at https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/
+
+---
+class: white-slide
+
+# TensorFlow
+
+.center[
+&lt;img src="images/tensorflow-logo-large.png" height=500px;/&gt;
+]
+
+
+---
+
+## A general purpose numerical computing library
+
+.pull-left[
+-  Originally developed by researchers and engineers working on the Google Brain Team for the purposes of conducting machine learning and deep neural networks research.
+- Open source software
+- Hardware independent
+    - CPU (via [Eigen](http://eigen.tuxfamily.org/) and [BLAS](https://en.wikipedia.org/wiki/Basic_Linear_Algebra_Subprograms))
+    - GPU (via [CUDA](https://en.wikipedia.org/wiki/CUDA) and [cuDNN](https://developer.nvidia.com/cudnn))
+    - TPU ([Tensor Processing Unit](https://en.wikipedia.org/wiki/Tensor_processing_unit))
+- Distributed execution and large datasets
+]
+.pull-right[
+&lt;img src="images/tensors_flowing.gif"/&gt;
+]
+
+
+---
+
+## What is deep learning?
+
+Input to output via layers of representation
+
+&lt;img src="images/a_deep_network.png"/&gt;
+
+
+---
+
+## Layers of representation
+
+&lt;img src="images/mnist_representations.png" height=500px;/&gt;
+ 
+
+
+
+---
+
+class: subtitle-slide, white, center, middle
+
+
+# Problem description: Peptide classification
+
+---
+
+class: white-slide
+
+## About peptides
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Peptide)
+
+&gt; Peptides (from Greek language πεπτός, peptós "digested"; derived from πέσσειν, péssein "to digest") are short chains of amino acid monomers linked by peptide (amide) bonds.
+
+.center[
+&lt;img src="images/tetrapeptide_formula_wikipedia.png" width="400px" /&gt;
+]
+
+
+The package `PepTools` is
+
+&gt; "An R-package for making immunoinformatics accessible". 
+
+---
+
+## Convert peptide to numeric representation
+
+
+
+```r
+library(PepTools)
+library(magrittr)
+pep_encode("LLTDAQRIV")[1, , ] %&gt;% rasterImage()
+```
+
+
+![](tensorflow-production-2019-06_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+
+
+---
+
+## Why should you care?
+
+The machine learning task is quite simple, but also a good example of an extremely common modeling task:
+
+* Predict the class of an observation, based on some features of this observation
+* In the case of the peptides example, the observation is a text string, which is expanded into a 9x20 tensor, and the task is a ulti-class classification.
+
+Many other problems are very similar, for example:
+
+* Binary classificiation of credit card default
+* Multi-class classification of images
+* Preduction of customer churn (binary class)
+
+In the case of the peptides, the modeling task is very simple, allowing the focus on the overall production deployment process.  In many real-world situations the modeling task is likely to be much more complex.
+
+---
+
+class: panel-wide-slide
+
+# Workflow
+
+The objective:
+
+* Train a TensorFlow model
+  - Given some input, predict the class
+  
+* Deploy the model to a production server
+* Get a prediction from the server
+
+---
+
+## Objective
+
+![](images/workflow_objective.png)
+
+---
+
+## Deployment
+
+![](images/workflow_deployment.png)
+
+
+---
+
+class: panel-narrow-slide
+
+## Deployment with RStudio Connect
+
+.center[
+&lt;img src="images/rstudio-connect.png" height=400/&gt;
+]
+
+
+---
+
+class: your-turn-slide
+
+# Demo
+
+* Train a TensorFlow model
+* Deploy the model
+* Deploy an API to call the TensorFlow API
+* Consume the model
+
+---
+class: panel-wide-slide
+
+# Thank you! 
+
+
+
+&lt;img src="images/r-logo.png" width=100/&gt; &lt;img src="images/tensorflow-logo.png" width=100 style="margin-left: 20px; ma"/&gt; 
+
+
+
+.smaller[
+Slides:
+
+&lt;https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/&gt;
+
+
+Subscribe to the blog to stay up to date!
+
+
+&lt;https://tensorflow.rstudio.com/blog/&gt;
+]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"countIncrementalSlides": true,
+"highlightLines": true,
+"highlightStyle": "github",
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

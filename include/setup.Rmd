@@ -1,0 +1,12 @@
+```{r}
+library(htmltools)
+presenter_notes <- function(...){
+  x <- list(...)
+  htmltools::tags$aside(
+    class = "note",
+    htmltools::tags$section(
+            do.call(list, lapply(x, htmltools::p))
+    )
+  )
+}
+```
