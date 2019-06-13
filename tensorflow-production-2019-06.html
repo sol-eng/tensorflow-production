@@ -4,7 +4,7 @@
     <title>Deploying TensorFlow models and APIs to Production</title>
     <meta charset="utf-8" />
     <meta name="author" content="Andrie de Vries" />
-    <meta name="date" content="2019-06-06" />
+    <meta name="date" content="2019-06-13" />
     <link rel="stylesheet" href="include\custom.css" type="text/css" />
     <link rel="stylesheet" href="include\rstudio.css" type="text/css" />
     <link rel="stylesheet" href="theme\speech-bubble.css" type="text/css" />
@@ -14,9 +14,9 @@
 class: center, middle, inverse, title-slide
 
 # Deploying TensorFlow models and APIs to Production
-## ThinkR / RStudio, Paris
+## Eoda / RStudio, Frankfurt
 ### Andrie de Vries
-### 2019-06-06
+### 2019-06-13
 
 ---
 
@@ -45,14 +45,20 @@ To follow along and try it yourself:
 * Accessing to the Virtual Machine
 
     - Go to https://rstd.io/class
-    - Use the workshop identifier **thinkr**
+    - Use the workshop identifier **eoda**
 
-* Finding the material
-    - Instructions at https://github.com/sol-eng/classroom-getting-started
+* Instructions at https://github.com/sol-eng/classroom-getting-started
     
-    - Immunotherapy repo at https://github.com/sol-eng/immunotherapy
-    
-    - This presentation at https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/
+---
+
+# Find the material
+
+.larger[
+
+- Immunotherapy repo at https://github.com/sol-eng/immunotherapy
+
+- This presentation at https://colorado.rstudio.com/rsc/tensorflow-production-eoda/
+]
 
 ---
 class: white-slide
@@ -183,13 +189,8 @@ The objective:
 
 ## Training the model
 
-![](images/model_1.png)
-
----
-
-## Training the model
-
 ![](images/model_2.png)
+
 
 ---
 
@@ -375,13 +376,18 @@ function(peptide, solo_url){
 
 ## Publish API
 
+You can publish an API using either:
+* push-button deployment, or
+* the `rsconnect` package
+
+
 ```r
 library(rsconnect)
 
 withr::with_dir(
   "plumber",
 
-  rsconnect::deployAPI(
+* rsconnect::deployAPI(
     api = ".",
     # server = "{server}",     # &lt;&lt;- edit this line if necessary
     # account = "{account}",   # &lt;&lt;- edit this line if necessary
@@ -442,30 +448,49 @@ r &lt;- GET(api_url, query = list(peptide = peptide),
 
 
 ```r
-library(httr)
-library(purrr)
-
-predict_peptide &lt;- function(peptide, solo_url = config::get("solo_url_plumber")){
-  if (substring(solo_url, nchar(solo_url)) != "/") solo_url &lt;- paste0(solo_url, "/")
+predict_peptide &lt;- function(peptide,
+*                           solo_url = config::get("solo_url_plumber")
+                            )
+{
+  if (substring(solo_url, nchar(solo_url)) != "/") {
+    solo_url &lt;- paste0(solo_url, "/")
+  }
 
   if(length(peptide &gt; 1)) peptide &lt;- paste(peptide, collapse = ",")
 
-  api_url &lt;- paste0(solo_url, "/predict")
+* api_url &lt;- paste0(solo_url, "/predict")
 
-  r &lt;- GET(api_url, query = list(peptide = peptide), encode = "json", content_type_json())
-  if (httr::http_error(r)){
-    cat(http_status(r))
-    stop(http_status(r))
-  }
-
+* r &lt;- GET(
+*   api_url,
+    query = list(peptide = peptide),
+    encode = "json", content_type_json()
+  )
+  stop_for_status(r)
   rc &lt;- content(r)
 
-  map_dfr(
-    rc,
+  rc %&gt;% map_dfr(
     ~as.data.frame(., stringsAsFactors = FALSE)
   )
 }
 ```
+
+---
+
+## In conclusion
+
+You have deployed a TensorFlow model and consumed this via two chained APIs:
+
+![](images/workflow_objective.png)
+
+---
+
+## Discussion
+
+* Have you encountered similar problems with binary or multi-class classification in your work?
+
+* Can you think of practical application of APIs in your own work?
+
+* When would you combine APIs with shiny apps?
 
 ---
 class: panel-wide-slide
@@ -481,7 +506,7 @@ class: panel-wide-slide
 .smaller[
 Slides:
 
-&lt;https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/&gt;
+&lt;https://colorado.rstudio.com/rsc/tensorflow-production-eoda/&gt;
 
 
 Subscribe to the blog to stay up to date!
