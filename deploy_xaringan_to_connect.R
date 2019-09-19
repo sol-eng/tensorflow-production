@@ -18,11 +18,11 @@ deploy_xaringan <- function(doc){
   rsconnect::deployApp(
     appDir = dirname(qualified_doc),
     appPrimaryDoc = basename(qualified_doc),
-    appTitle = "Taking TensorFlow into Production Eoda 2019",
+    appTitle = "Taking TensorFlow into Production Mango Solutions 2019",
     appFiles = app_files,
     forceUpdate = TRUE,
     server = "colorado.rstudio.com"
   )
 }
 
-deploy_xaringan("tensorflow-production-2019-06.html")
+deploy_xaringan("tensorflow-production.html")

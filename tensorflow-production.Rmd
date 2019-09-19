@@ -1,8 +1,8 @@
 ---
 title: "Deploying TensorFlow models and APIs to Production"
-subtitle: "Eoda / RStudio, Frankfurt"
+subtitle: "Mango Solutions / RStudio, London"
 author: "Andrie de Vries"
-date: "2019-06-13"
+date: "2019-09-24"
 output:  
   xaringan::moon_reader:
     lib_dir: libs
@@ -18,10 +18,15 @@ output:
 resource_files:
   - include
   - images
+params:
+  workshop_identifier: "mango"
+  presentation_url: "https://colorado.rstudio.com/rsc/tensorflow-production-mango/"
 ---
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
+workshop_identifier <- params$workshop_identifier
+presentation_url <- params$presentation_url
 ```
 
 
@@ -43,10 +48,11 @@ Taking TensorFlow into Production
 
 To follow along and try it yourself:
 
-* Accessing to the Virtual Machine
+* Accessing the Virtual Machine
 
     - Go to https://rstd.io/class
-    - Use the workshop identifier **eoda**
+    - Use the workshop identifier **`r workshop_identifier`**
+  
 
 * Instructions at https://github.com/sol-eng/classroom-getting-started
     
@@ -56,9 +62,13 @@ To follow along and try it yourself:
 
 .larger[
 
-- Immunotherapy repo at https://github.com/sol-eng/immunotherapy
+- Immunotherapy repo at:
 
-- This presentation at https://colorado.rstudio.com/rsc/tensorflow-production-eoda/
+    - https://github.com/sol-eng/immunotherapy
+
+- This presentation at:
+
+    - `r presentation_url`
 ]
 
 ---

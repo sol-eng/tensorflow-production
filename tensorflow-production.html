@@ -4,7 +4,7 @@
     <title>Deploying TensorFlow models and APIs to Production</title>
     <meta charset="utf-8" />
     <meta name="author" content="Andrie de Vries" />
-    <meta name="date" content="2019-06-13" />
+    <meta name="date" content="2019-09-24" />
     <link rel="stylesheet" href="include\custom.css" type="text/css" />
     <link rel="stylesheet" href="include\rstudio.css" type="text/css" />
     <link rel="stylesheet" href="theme\speech-bubble.css" type="text/css" />
@@ -14,9 +14,9 @@
 class: center, middle, inverse, title-slide
 
 # Deploying TensorFlow models and APIs to Production
-## Eoda / RStudio, Frankfurt
+## Mango Solutions / RStudio, London
 ### Andrie de Vries
-### 2019-06-13
+### 2019-09-24
 
 ---
 
@@ -42,10 +42,11 @@ Taking TensorFlow into Production
 
 To follow along and try it yourself:
 
-* Accessing to the Virtual Machine
+* Accessing the Virtual Machine
 
     - Go to https://rstd.io/class
-    - Use the workshop identifier **eoda**
+    - Use the workshop identifier **mango**
+  
 
 * Instructions at https://github.com/sol-eng/classroom-getting-started
     
@@ -55,9 +56,13 @@ To follow along and try it yourself:
 
 .larger[
 
-- Immunotherapy repo at https://github.com/sol-eng/immunotherapy
+- Immunotherapy repo at:
 
-- This presentation at https://colorado.rstudio.com/rsc/tensorflow-production-eoda/
+    - https://github.com/sol-eng/immunotherapy
+
+- This presentation at:
+
+    - https://colorado.rstudio.com/rsc/tensorflow-production-mango/
 ]
 
 ---
@@ -145,7 +150,7 @@ pep_encode("LLTDAQRIV")[1, , ] %&gt;% rasterImage()
 ```
 
 
-![](tensorflow-production-2019-06_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](tensorflow-production_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -353,13 +358,13 @@ https://www.rplumber.io/
 
 
 ```r
-*
-*#* @apiTitle Immunotherapy
-*
-*#* Predict peptide class
-*#* @param peptide Character vector with a single peptide, eg. `"LLTDAQRIV"` or comma separated, e.g. `"LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV, RQFTCMIAV"`
-*#* @get /predict
-*
+{{
+#* @apiTitle Immunotherapy
+
+#* Predict peptide class
+#* @param peptide Character vector with a single peptide, eg. `"LLTDAQRIV"` or comma separated, e.g. `"LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV, RQFTCMIAV"`
+#* @get /predict
+}}
 function(peptide, solo_url){
   if (missing(solo_url) || is.null(solo_url)) {
     solo_url &lt;- config::get("solo_url_tensorflow") # TensorFlow API
