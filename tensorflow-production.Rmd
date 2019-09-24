@@ -6,10 +6,9 @@ date: "2019-09-24"
 output:  
   xaringan::moon_reader:
     lib_dir: libs
-    css:
-    - include/custom.css
-    - include/rstudio.css
-    - theme/speech-bubble.css
+    css: [ include/rstudio.css ]
+    includes: 
+      in_header: [ include/toc.html ]
     nature:
       countIncrementalSlides: yes
       highlightLines: yes
@@ -23,6 +22,36 @@ params:
   presentation_url: "https://colorado.rstudio.com/rsc/tensorflow-production-mango/"
 ---
 
+layout: true
+
+```{r, echo=FALSE}
+## Insert navigation buttons
+htmltools::div(
+  class = "navigation-buttons navigation-buttons-first",
+  onclick = "slideshow.gotoFirstSlide();",
+  "<<"
+)
+htmltools::div(
+  class = "navigation-buttons navigation-buttons-prev",
+  onclick = "slideshow.gotoPreviousSlide();",
+  "<"
+)
+htmltools::div(
+  class = "navigation-buttons navigation-buttons-next",
+  onclick = "slideshow.gotoNextSlide();",
+  ">"
+)
+htmltools::div(
+  class = "navigation-buttons navigation-buttons-last",
+  onclick = "slideshow.gotoLastSlide();",
+  ">>"
+)
+```
+
+---
+
+class: title-slide, middle, center
+
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 workshop_identifier <- params$workshop_identifier
@@ -31,7 +60,17 @@ presentation_url <- params$presentation_url
 
 
 
-# Outline
+```{r, echo = FALSE}
+## Create title slide
+htmltools::h1(rmarkdown::metadata$title)
+htmltools::h2(rmarkdown::metadata$subtitle)
+htmltools::h3(rmarkdown::metadata$author)
+htmltools::h3(Sys.Date())
+```
+
+---
+
+## Outline
 
 Taking TensorFlow into Production
 
@@ -42,9 +81,10 @@ Taking TensorFlow into Production
 * Challenges of production deployment
 
 
+
 ---
 
-# But first
+## But first
 
 To follow along and try it yourself:
 
@@ -55,10 +95,16 @@ To follow along and try it yourself:
   
 
 * Instructions at https://github.com/sol-eng/classroom-getting-started
+
+---
+
+class: toc-slide
+
+## Agenda
     
 ---
 
-# Find the material
+## Find the material
 
 .larger[
 
@@ -72,9 +118,9 @@ To follow along and try it yourself:
 ]
 
 ---
-class: white-slide
+class: subtitle-slide
 
-# TensorFlow
+## TensorFlow
 
 .center[
 <img src="images/tensorflow-logo-large.png" height=500px;/>
@@ -83,7 +129,7 @@ class: white-slide
 
 ---
 
-## A general purpose numerical computing library
+### A general purpose numerical computing library
 
 .pull-left[
 -  Originally developed by researchers and engineers working on the Google Brain Team for the purposes of conducting machine learning and deep neural networks research.
@@ -101,7 +147,7 @@ class: white-slide
 
 ---
 
-## What is deep learning?
+### What is deep learning?
 
 Input to output via layers of representation
 
@@ -110,7 +156,7 @@ Input to output via layers of representation
 
 ---
 
-## Layers of representation
+### Layers of representation
 
 <img src="images/mnist_representations.png" height=500px;/>
  
@@ -119,16 +165,14 @@ Input to output via layers of representation
 
 ---
 
-class: subtitle-slide, white, center, middle
+class: subtitle-slide
 
-
-# Problem description: Peptide classification
+## Problem description: Peptide classification
 
 ---
 
-class: white-slide
 
-## About peptides
+### About peptides
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Peptide)
 
@@ -145,7 +189,7 @@ The package `PepTools` is
 
 ---
 
-## Convert peptide to numeric representation
+### Convert peptide to numeric representation
 
 
 ```{r, eval=FALSE}
@@ -176,7 +220,7 @@ recolour <- function(x, palette = "Blues"){
   as.raster(matrix(col_custom(x), nrow = dims[1], ncol = dims[2]))
 }
 
-# Plot peptide representation
+## Plot peptide representation
 plot_peptide <- function(x, palette = "Blues"){
   
   plot.new()
@@ -195,7 +239,7 @@ plot_peptide("LLTDAQRIV")
 
 ---
 
-## Why should you care?
+### Why should you care?
 
 The machine learning task is quite simple, but also a good example of an extremely common modeling task:
 
@@ -212,9 +256,13 @@ In the case of the peptides, the modeling task is very simple, allowing the focu
 
 ---
 
-class: panel-wide-slide
+class: class: subtitle-slide
 
-# Workflow
+## Workflow
+
+---
+
+### Workflow: objective
 
 The objective:
 
@@ -226,20 +274,20 @@ The objective:
 
 ---
 
-## Objective
+### Objective
 
 ![](images/workflow_objective.png)
 
 ---
 
-## Training the model
+### Training the model
 
 ![](images/model_2.png)
 
 
 ---
 
-## Deployment
+### Deployment
 
 ![](images/workflow_deployment.png)
 
@@ -248,7 +296,7 @@ The objective:
 
 class: panel-narrow-slide
 
-## Deployment with RStudio Connect
+### Deployment with RStudio Connect
 
 .center[
 <img src="images/rstudio-connect.png" height=400/>
@@ -257,9 +305,13 @@ class: panel-narrow-slide
 
 ---
 
-class: your-turn-slide
+class: subtitle-slide
 
-# Demo
+## Demo
+
+---
+
+### Demo
 
 * Train a TensorFlow model
 * Deploy the model
@@ -269,7 +321,7 @@ class: your-turn-slide
 
 ---
 
-## Publish TensorFlow model
+### Publish TensorFlow model
 
 ```r
 library(rsconnect)
@@ -283,13 +335,13 @@ rsconnect::deployTFModel(
 
 ---
 
-## Your TensorFlow model is available as an API
+### Your TensorFlow model is available as an API
 
 ![](images/api_tensorflow.png)
 
 ---
 
-## Call the API using `curl` or `httr`
+### Call the API using `curl` or `httr`
 
 Use `httr::POST()` from R.
 
@@ -317,7 +369,7 @@ Use `httr::POST()` from R.
 
 ---
 
-## Using the `config` package
+### Using the `config` package
 
 Use the `config` package to store variables that depend on your enviroment.
 
@@ -351,7 +403,7 @@ config$dataset
 
 ---
 
-## How does the function know where the API is?
+### How does the function know where the API is?
 
 
 
@@ -385,7 +437,7 @@ predict_peptide_class_fun <- function(
 
 ---
 
-## Turning any R function into an API using `plumber`
+### Turning any R function into an API using `plumber`
 
 https://www.rplumber.io/
 
@@ -393,7 +445,7 @@ https://www.rplumber.io/
 
 ---
 
-## Decorate your code to specify the API
+### Decorate your code to specify the API
 
 ```{r, eval=FALSE}
 {{
@@ -417,7 +469,7 @@ function(peptide, solo_url){
 
 ---
 
-## Publish API
+### Publish API
 
 You can publish an API using either:
 * push-button deployment, or
@@ -441,22 +493,22 @@ withr::with_dir(
 
 ---
 
-## Your `plumber` API is available as swagger
+### Your `plumber` API is available as swagger
 
 ![](images/api_swagger.png)
 
 ---
 
-## Use `httr` to call an API
+### Use `httr` to call an API
 
 Making the `GET` call
 
 ```{r, eval=FALSE}
-# Call the API
+## Call the API
 r <- GET(api_url, query = list(peptide = peptide), #<<
          encode = "json", content_type_json())     #<<
 
-# Error checking
+## Error checking
 if (httr::http_error(r)){
   cat(http_status(r))
   stop(http_status(r))
@@ -466,16 +518,16 @@ if (httr::http_error(r)){
 
 ---
 
-## Check for errors
+### Check for errors
 
 Check for errors using `httr::http_error()`:
 
 ```{r, eval=FALSE}
-# Call the API
+## Call the API
 r <- GET(api_url, query = list(peptide = peptide),
          encode = "json", content_type_json())
 
-# Error checking
+## Error checking
 if (httr::http_error(r)){ #<<
   cat(http_status(r))
   stop(http_status(r))
@@ -484,7 +536,7 @@ if (httr::http_error(r)){ #<<
 
 ---
 
-## Consuming the plumber API
+### Consuming the plumber API
 
 ```{r, eval=FALSE}
 predict_peptide <- function(peptide,
@@ -515,7 +567,13 @@ predict_peptide <- function(peptide,
 
 ---
 
+class: subtitle-slide
+
 ## In conclusion
+
+---
+
+### Conclusion
 
 You have deployed a TensorFlow model and consumed this via two chained APIs:
 
@@ -523,33 +581,38 @@ You have deployed a TensorFlow model and consumed this via two chained APIs:
 
 ---
 
-## Discussion
+### Discussion
 
-* Have you encountered similar problems with binary or multi-class classification in your work?
 
-* Can you think of practical application of APIs in your own work?
 
-* When would you combine APIs with shiny apps?
+***
+
+Have you encountered similar problems with binary or multi-class classification in your work?
+
+***
+
+Can you think of practical application of APIs in your own work?
+
+***
+
+When would you combine APIs with shiny apps?
 
 ---
-class: panel-wide-slide
+class: panel-wide-slide, center
 
-# Thank you! 
-
-
-
-<img src="images/r-logo.png" width=100/> <img src="images/tensorflow-logo.png" width=100 style="margin-left: 20px; ma"/> 
+## Thank you! 
 
 
+<img src="images/r-logo.png" height=150/>
+<img src="images/tensorflow-logo.png" height=150 style="margin-left: 50px; ma"/> 
 
-.smaller[
+<br/>
+
 Slides:
-
-<https://colorado.rstudio.com/rsc/tensorflow-production-eoda/>
+`r presentation_url`
 
 
 Subscribe to the blog to stay up to date!
 
 
 <https://tensorflow.rstudio.com/blog/>
-]

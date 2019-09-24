@@ -5,9 +5,31 @@
     <meta charset="utf-8" />
     <meta name="author" content="Andrie de Vries" />
     <meta name="date" content="2019-09-24" />
-    <link rel="stylesheet" href="include\custom.css" type="text/css" />
+    <!-- Include jquery -->
+    <script
+    src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+    crossorigin="anonymous">
+    </script>
+     
+     <!-- Finds h1 elements, combine into <li> items, then inserts aftert the  -->
+     <!-- h1 heading on slides with class "toc" -->
+    <script>
+    $(document).ready(function() {
+      var headings = $( ":not(.toc-slide) > h2" );
+      var items = headings.map(
+        function(){return $(this).text()}
+        ).get()
+      items.shift(); // Ignore first element from title slide
+      items.pop();   // Ignore spurious last element
+      items.pop();
+      var item_list = items.join("</li><li>");
+      var toc = "<ul><li>" + item_list + "</li></ul>";
+      $(".toc-slide > h2").after(toc);
+      
+    });
+    </script>
     <link rel="stylesheet" href="include\rstudio.css" type="text/css" />
-    <link rel="stylesheet" href="theme\speech-bubble.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -21,11 +43,23 @@ class: center, middle, inverse, title-slide
 ---
 
 
+layout: true
+
+<div class="navigation-buttons navigation-buttons-first" onclick="slideshow.gotoFirstSlide();">&lt;&lt;</div><div class="navigation-buttons navigation-buttons-prev" onclick="slideshow.gotoPreviousSlide();">&lt;</div><div class="navigation-buttons navigation-buttons-next" onclick="slideshow.gotoNextSlide();">&gt;</div><div class="navigation-buttons navigation-buttons-last" onclick="slideshow.gotoLastSlide();">&gt;&gt;</div>
+
+---
+
+class: title-slide, middle, center
 
 
 
 
-# Outline
+
+<h1>Deploying TensorFlow models and APIs to Production</h1><h2>Mango Solutions / RStudio, London</h2><h3>Andrie de Vries</h3><h3>2019-09-24</h3>
+
+---
+
+## Outline
 
 Taking TensorFlow into Production
 
@@ -36,9 +70,10 @@ Taking TensorFlow into Production
 * Challenges of production deployment
 
 
+
 ---
 
-# But first
+## But first
 
 To follow along and try it yourself:
 
@@ -49,10 +84,16 @@ To follow along and try it yourself:
   
 
 * Instructions at https://github.com/sol-eng/classroom-getting-started
+
+---
+
+class: toc-slide
+
+## Agenda
     
 ---
 
-# Find the material
+## Find the material
 
 .larger[
 
@@ -66,9 +107,9 @@ To follow along and try it yourself:
 ]
 
 ---
-class: white-slide
+class: subtitle-slide
 
-# TensorFlow
+## TensorFlow
 
 .center[
 &lt;img src="images/tensorflow-logo-large.png" height=500px;/&gt;
@@ -77,7 +118,7 @@ class: white-slide
 
 ---
 
-## A general purpose numerical computing library
+### A general purpose numerical computing library
 
 .pull-left[
 -  Originally developed by researchers and engineers working on the Google Brain Team for the purposes of conducting machine learning and deep neural networks research.
@@ -95,7 +136,7 @@ class: white-slide
 
 ---
 
-## What is deep learning?
+### What is deep learning?
 
 Input to output via layers of representation
 
@@ -104,7 +145,7 @@ Input to output via layers of representation
 
 ---
 
-## Layers of representation
+### Layers of representation
 
 &lt;img src="images/mnist_representations.png" height=500px;/&gt;
  
@@ -113,16 +154,14 @@ Input to output via layers of representation
 
 ---
 
-class: subtitle-slide, white, center, middle
+class: subtitle-slide
 
-
-# Problem description: Peptide classification
+## Problem description: Peptide classification
 
 ---
 
-class: white-slide
 
-## About peptides
+### About peptides
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Peptide)
 
@@ -139,7 +178,7 @@ The package `PepTools` is
 
 ---
 
-## Convert peptide to numeric representation
+### Convert peptide to numeric representation
 
 
 
@@ -150,12 +189,12 @@ pep_encode("LLTDAQRIV")[1, , ] %&gt;% rasterImage()
 ```
 
 
-![](tensorflow-production_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+![](tensorflow-production_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
 
 
 ---
 
-## Why should you care?
+### Why should you care?
 
 The machine learning task is quite simple, but also a good example of an extremely common modeling task:
 
@@ -172,9 +211,13 @@ In the case of the peptides, the modeling task is very simple, allowing the focu
 
 ---
 
-class: panel-wide-slide
+class: class: subtitle-slide
 
-# Workflow
+## Workflow
+
+---
+
+### Workflow: objective
 
 The objective:
 
@@ -186,20 +229,20 @@ The objective:
 
 ---
 
-## Objective
+### Objective
 
 ![](images/workflow_objective.png)
 
 ---
 
-## Training the model
+### Training the model
 
 ![](images/model_2.png)
 
 
 ---
 
-## Deployment
+### Deployment
 
 ![](images/workflow_deployment.png)
 
@@ -208,7 +251,7 @@ The objective:
 
 class: panel-narrow-slide
 
-## Deployment with RStudio Connect
+### Deployment with RStudio Connect
 
 .center[
 &lt;img src="images/rstudio-connect.png" height=400/&gt;
@@ -217,9 +260,13 @@ class: panel-narrow-slide
 
 ---
 
-class: your-turn-slide
+class: subtitle-slide
 
-# Demo
+## Demo
+
+---
+
+### Demo
 
 * Train a TensorFlow model
 * Deploy the model
@@ -229,7 +276,7 @@ class: your-turn-slide
 
 ---
 
-## Publish TensorFlow model
+### Publish TensorFlow model
 
 ```r
 library(rsconnect)
@@ -243,13 +290,13 @@ rsconnect::deployTFModel(
 
 ---
 
-## Your TensorFlow model is available as an API
+### Your TensorFlow model is available as an API
 
 ![](images/api_tensorflow.png)
 
 ---
 
-## Call the API using `curl` or `httr`
+### Call the API using `curl` or `httr`
 
 Use `httr::POST()` from R.
 
@@ -278,7 +325,7 @@ Use `httr::POST()` from R.
 
 ---
 
-## Using the `config` package
+### Using the `config` package
 
 Use the `config` package to store variables that depend on your enviroment.
 
@@ -312,7 +359,7 @@ config$dataset
 
 ---
 
-## How does the function know where the API is?
+### How does the function know where the API is?
 
 
 
@@ -346,7 +393,7 @@ predict_peptide_class_fun &lt;- function(
 
 ---
 
-## Turning any R function into an API using `plumber`
+### Turning any R function into an API using `plumber`
 
 https://www.rplumber.io/
 
@@ -354,7 +401,7 @@ https://www.rplumber.io/
 
 ---
 
-## Decorate your code to specify the API
+### Decorate your code to specify the API
 
 
 ```r
@@ -379,7 +426,7 @@ function(peptide, solo_url){
 
 ---
 
-## Publish API
+### Publish API
 
 You can publish an API using either:
 * push-button deployment, or
@@ -404,23 +451,23 @@ withr::with_dir(
 
 ---
 
-## Your `plumber` API is available as swagger
+### Your `plumber` API is available as swagger
 
 ![](images/api_swagger.png)
 
 ---
 
-## Use `httr` to call an API
+### Use `httr` to call an API
 
 Making the `GET` call
 
 
 ```r
-# Call the API
+## Call the API
 *r &lt;- GET(api_url, query = list(peptide = peptide),
 *        encode = "json", content_type_json())
 
-# Error checking
+## Error checking
 if (httr::http_error(r)){
   cat(http_status(r))
   stop(http_status(r))
@@ -430,17 +477,17 @@ if (httr::http_error(r)){
 
 ---
 
-## Check for errors
+### Check for errors
 
 Check for errors using `httr::http_error()`:
 
 
 ```r
-# Call the API
+## Call the API
 r &lt;- GET(api_url, query = list(peptide = peptide),
          encode = "json", content_type_json())
 
-# Error checking
+## Error checking
 *if (httr::http_error(r)){
   cat(http_status(r))
   stop(http_status(r))
@@ -449,7 +496,7 @@ r &lt;- GET(api_url, query = list(peptide = peptide),
 
 ---
 
-## Consuming the plumber API
+### Consuming the plumber API
 
 
 ```r
@@ -481,7 +528,13 @@ predict_peptide &lt;- function(peptide,
 
 ---
 
+class: subtitle-slide
+
 ## In conclusion
+
+---
+
+### Conclusion
 
 You have deployed a TensorFlow model and consumed this via two chained APIs:
 
@@ -489,36 +542,41 @@ You have deployed a TensorFlow model and consumed this via two chained APIs:
 
 ---
 
-## Discussion
+### Discussion
 
-* Have you encountered similar problems with binary or multi-class classification in your work?
 
-* Can you think of practical application of APIs in your own work?
 
-* When would you combine APIs with shiny apps?
+***
+
+Have you encountered similar problems with binary or multi-class classification in your work?
+
+***
+
+Can you think of practical application of APIs in your own work?
+
+***
+
+When would you combine APIs with shiny apps?
 
 ---
-class: panel-wide-slide
+class: panel-wide-slide, center
 
-# Thank you! 
-
-
-
-&lt;img src="images/r-logo.png" width=100/&gt; &lt;img src="images/tensorflow-logo.png" width=100 style="margin-left: 20px; ma"/&gt; 
+## Thank you! 
 
 
+&lt;img src="images/r-logo.png" height=150/&gt;
+&lt;img src="images/tensorflow-logo.png" height=150 style="margin-left: 50px; ma"/&gt; 
 
-.smaller[
+&lt;br/&gt;
+
 Slides:
-
-&lt;https://colorado.rstudio.com/rsc/tensorflow-production-eoda/&gt;
+https://colorado.rstudio.com/rsc/tensorflow-production-mango/
 
 
 Subscribe to the blog to stay up to date!
 
 
 &lt;https://tensorflow.rstudio.com/blog/&gt;
-]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

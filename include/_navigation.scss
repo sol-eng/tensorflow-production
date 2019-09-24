@@ -1,0 +1,39 @@
+.navigation-buttons{
+    bottom: 10px;
+    opacity: .6;
+    position: absolute;
+    font-size: 20px;
+    font-weight: normal;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 3px;
+  }
+  
+  .title-slide .navigation-buttons {
+    color: #ffffff;
+    opacity: 1;
+  }
+    
+  .navigation-buttons:hover{
+    opacity: 0.8;
+    font-weight: 800;
+    color: #000;
+    background-color: #aaa;
+  }
+  
+  .navigation-buttons-first {
+    right: 210px;
+  }
+  
+  .navigation-buttons-prev {
+    right: 180px;
+  }
+  
+  .navigation-buttons-next {
+    right: 150px;
+  }
+  
+  .navigation-buttons-last {
+    right: 110px;
+  }
+  

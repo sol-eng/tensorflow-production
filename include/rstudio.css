@@ -1,41 +1,42 @@
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,600');
-@import url('https://fonts.googleapis.com/css?family=PT+Mono');
-
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,600");
+@import url("https://fonts.googleapis.com/css?family=PT+Mono");
 body {
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
   line-height: 1.2;
-
 }
 
 strong {
-  font-family: 'Source Sans Pro';
+  font-family: "Source Sans Pro";
 }
 
-p, li {
+p {
+  font-size: 24px;
   line-height: 1.2;
-  font-size: 28px;
+  margin: 0.75em 0 0.25em 0;
 }
 
-.title-slide h1{
-  color: #fff;
+ul, ul p {
+  line-height: 1.2em;
+  margin: 0.25em 0 0.25em 0;
 }
 
-.title-slide h2{
-  color: #fff;
+ul li, ul li p {
+  font-size: 24px;
+  line-height: 1.2;
 }
 
-.title-slide h3{
-  color: #fff;
+ul li ul li, ul li ul li p {
+  font-size: 20px;
+  line-height: 1.2;
 }
 
-
-h1, h2, h3{
-  color: rgb(40, 86, 129);
+h1, h2, h3 {
+  font-family: "Source Sans Pro";
+  color: #58A1D2;
   font-weight: normal;
 }
 
 h1 {
-  font-family: 'Source Sans Pro';
   font-size: 64px;
 }
 
@@ -47,11 +48,31 @@ h3 {
   font-size: 32px;
 }
 
-a, a > code {
-  font-family: 'Source Sans Pro';
-  color: rgb(60, 142, 219);
-  text-decoration: none;
+a {
+  font-family: "Source Sans Pro";
   font-size: 90%;
+  color: #75AADB;
+  border-bottom: 0;
+}
+
+a > code {
+  font-family: "PT Mono";
+  text-decoration: none;
+  font-size: 80%;
+}
+
+a:hover {
+  color: #2a7cdf !important;
+  border-bottom: 1px solid rgba(42, 124, 223, 0.5);
+}
+
+q, blockquote {
+  quotes: "> '" "'";
+  font-style: italic;
+}
+
+q p, blockquote p {
+  font-size: 24px;
 }
 
 .footnote {
@@ -75,16 +96,22 @@ table {
   border-bottom: 1px solid #666;
 }
 
-table thead th { border-bottom: 1px solid #ddd; }
+table thead th {
+  border-bottom: 1px solid #ddd;
+}
 
 th, td {
   padding: 5px;
   font-size: 24px;
 }
 
-thead, tfoot, tr:nth-child(even) { background: #eee }
+thead, tfoot, tr:nth-child(even) {
+  background: #eee;
+}
 
-@page { margin: 0; }
+@page {
+  margin: 0;
+}
 
 @media print {
   .remark-slide-scaler {
@@ -96,7 +123,7 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
   }
 }
 
-.remark-slide-content{
+.remark-slide-content {
   font-size: 20px;
   line-height: 1.2;
 }
@@ -106,15 +133,16 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
   background-color: #f8f8f8;
 }
 
-.remark-code{
-  font-size:90%;
+.remark-code {
+  font-size: 90%;
 }
+
 .remark-inline-code {
   font-size: 80%;
 }
 
 .remark-code-line-highlighted {
-  background-color: rgb(238, 235, 73);
+  background-color: #fff;
 }
 
 .remark-slide-number {
@@ -157,6 +185,22 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
   clear: both;
 }
 
+.illustration {
+  border: solid 1px #cccccc;
+}
+
+small {
+  font-size: 0.6em;
+}
+
+h4 {
+  margin-bottom: 15px;
+}
+
+img {
+  padding: 0.5em 0;
+}
+
 /**
 slide types: 
   * title-slide (used automatically),
@@ -165,18 +209,26 @@ slide types:
   * panel-narrow-slide,
   * blank-slide + white or blue
 **/
-
-.title-slide, .subtitle-slide, .panel-narrow-slide, .panel-wide-slide, .your-turn-slide, .blank-slide {
+.title-slide,
+.subtitle-slide,
+.panel-narrow-slide,
+.panel-wide-slide,
+.your-turn-slide,
+.blank-slide,
+.blank-slide.blue {
   background-size: cover;
 }
 
 .title-slide {
-  background-image: url('./title.png');
-  font-family: 'Source Sans Pro';
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/title.png");
+  font-family: "Source Sans Pro";
   font-weight: normal;
   line-height: 1.2;
 }
 
+.title-slide h1, .title-slide h2, .title-slide h3 {
+  color: #fff;
+}
 
 .title-slide h1 {
   font-size: 80px;
@@ -195,29 +247,39 @@ slide types:
   display: none;
 }
 
+.subtitle-slide {
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/panel-wide.png");
+  padding-left: 360px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.toc-slide {
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/panel-wide.png");
+  padding-left: 180px;
+}
+
 .panel-narrow-slide {
-  background-image: url('./panel-narrow.png');
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/panel-narrow.png");
   padding-left: 180px;
 }
 
 .panel-wide-slide {
-  background-image: url('./panel-wide.png');
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/panel-wide.png");
   padding-left: 360px;
 }
 
-
 .your-turn-slide {
-  background-image: url('./your-turn.png');
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/your-turn.png");
   padding-left: 360px;
 }
 
 .subtitle-slide.blue {
-  background-image: url('./subtitle-blue.png');
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/subtitle-blue.png");
 }
 
 .blank-slide.blue {
-  background-image: url('./blank-blue.png');
-  background-size: cover;
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/blank-blue.png");
 }
 
 .blue {
@@ -225,13 +287,53 @@ slide types:
 }
 
 .subtitle-slide.white {
-  background-image: url('./subtitle-white.png');
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/subtitle-white.png");
 }
 
 .blank-slide.white {
-  background-image: url('./blank-white.png');
+  background-image: url("https://cdn.rstudio.com/pro-admin/template/blank-white.png");
 }
 
 .white {
   color: #404040;
 }
+
+.navigation-buttons {
+  bottom: 10px;
+  opacity: .6;
+  position: absolute;
+  font-size: 20px;
+  font-weight: normal;
+  padding-right: 5px;
+  padding-left: 5px;
+  border-radius: 3px;
+}
+
+.title-slide .navigation-buttons {
+  color: #ffffff;
+  opacity: 1;
+}
+
+.navigation-buttons:hover {
+  opacity: 0.8;
+  font-weight: 800;
+  color: #000;
+  background-color: #aaa;
+}
+
+.navigation-buttons-first {
+  right: 210px;
+}
+
+.navigation-buttons-prev {
+  right: 180px;
+}
+
+.navigation-buttons-next {
+  right: 150px;
+}
+
+.navigation-buttons-last {
+  right: 110px;
+}
+

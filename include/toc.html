@@ -1,0 +1,24 @@
+<!-- Include jquery -->
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous">
+</script>
+ 
+ <!-- Finds h1 elements, combine into <li> items, then inserts aftert the  -->
+ <!-- h1 heading on slides with class "toc" -->
+<script>
+$(document).ready(function() {
+  var headings = $( ":not(.toc-slide) > h2" );
+  var items = headings.map(
+    function(){return $(this).text()}
+    ).get()
+  items.shift(); // Ignore first element from title slide
+  items.pop();   // Ignore spurious last element
+  items.pop();
+  var item_list = items.join("</li><li>");
+  var toc = "<ul><li>" + item_list + "</li></ul>";
+  $(".toc-slide > h2").after(toc);
+  
+});
+</script>
