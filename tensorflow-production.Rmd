@@ -6,9 +6,11 @@ date: "2019-09-24"
 output:  
   xaringan::moon_reader:
     lib_dir: libs
-    css: [ include/rstudio.css ]
+    css: [ "include/rstudio.css" ]
     includes: 
-      in_header: [ include/toc.html ]
+      in_header: 
+        - "include/toc.html"
+    seal: true
     nature:
       countIncrementalSlides: yes
       highlightLines: yes
@@ -22,35 +24,6 @@ params:
   presentation_url: "https://colorado.rstudio.com/rsc/tensorflow-production-mango/"
 ---
 
-layout: true
-
-```{r, echo=FALSE}
-## Insert navigation buttons
-htmltools::div(
-  class = "navigation-buttons navigation-buttons-first",
-  onclick = "slideshow.gotoFirstSlide();",
-  "<<"
-)
-htmltools::div(
-  class = "navigation-buttons navigation-buttons-prev",
-  onclick = "slideshow.gotoPreviousSlide();",
-  "<"
-)
-htmltools::div(
-  class = "navigation-buttons navigation-buttons-next",
-  onclick = "slideshow.gotoNextSlide();",
-  ">"
-)
-htmltools::div(
-  class = "navigation-buttons navigation-buttons-last",
-  onclick = "slideshow.gotoLastSlide();",
-  ">>"
-)
-```
-
----
-
-class: title-slide, middle, center
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
@@ -58,17 +31,6 @@ workshop_identifier <- params$workshop_identifier
 presentation_url <- params$presentation_url
 ```
 
-
-
-```{r, echo = FALSE}
-## Create title slide
-htmltools::h1(rmarkdown::metadata$title)
-htmltools::h2(rmarkdown::metadata$subtitle)
-htmltools::h3(rmarkdown::metadata$author)
-htmltools::h3(Sys.Date())
-```
-
----
 
 ## Outline
 
@@ -84,7 +46,13 @@ Taking TensorFlow into Production
 
 ---
 
-## But first
+class: subtitle-slide
+
+## Follow along
+
+---
+
+### But first
 
 To follow along and try it yourself:
 
@@ -98,15 +66,10 @@ To follow along and try it yourself:
 
 ---
 
-class: toc-slide
 
-## Agenda
-    
----
+### Find the material
 
-## Find the material
 
-.larger[
 
 - Immunotherapy repo at:
 
@@ -115,12 +78,17 @@ class: toc-slide
 - This presentation at:
 
     - `r presentation_url`
-]
 
 ---
+
 class: subtitle-slide
 
 ## TensorFlow
+
+---
+
+### TensorFlow
+
 
 .center[
 <img src="images/tensorflow-logo-large.png" height=500px;/>
@@ -448,13 +416,15 @@ https://www.rplumber.io/
 ### Decorate your code to specify the API
 
 ```{r, eval=FALSE}
-{{
+
 #* @apiTitle Immunotherapy
 
 #* Predict peptide class
-#* @param peptide Character vector with a single peptide, eg. `"LLTDAQRIV"` or comma separated, e.g. `"LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV, RQFTCMIAV"`
+#* @param peptide Character vector with a single peptide, eg. `LLTDAQRIV`
+#*   or comma separated, e.g. `LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV,
+#*   RQFTCMIAV`
 #* @get /predict
-}}
+
 function(peptide, solo_url){
   if (missing(solo_url) || is.null(solo_url)) {
     solo_url <- config::get("solo_url_tensorflow") # TensorFlow API
@@ -495,7 +465,9 @@ withr::with_dir(
 
 ### Your `plumber` API is available as swagger
 
-![](images/api_swagger.png)
+.center[
+<img src="images/api_swagger.png" height=500px />
+]
 
 ---
 

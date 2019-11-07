@@ -1,0 +1,41 @@
+.table-of-contents {
+    padding: 25px 0px;
+    ul {
+      list-style-type: none;
+    }
+    ul li, ul li p {
+        font-size: 1.5em;
+    }
+    a {
+      font-family: $font_text;
+      font-size: 100%;
+      color: grey;
+      text-decoration: none;
+    }
+    .toc-active {
+      color: $rstudio_blue;
+      border-style: solid;
+      background-color: #eee;
+      border-radius: 7px;
+    }
+  }
+
+  
+  @for $i from 1 through 20 {
+      .toc-#{$i}-entries {
+          ul li, ul li p {
+            @if $i <= 5 {
+                font-size: 30px - 0.5 * $i;
+                margin: 0.5em;
+            } @else if $i <= 10 { 
+                font-size: 30px - 0.5 * $i;
+                margin: 0.3em;
+            } @else if $i <= 15 { 
+                font-size: 26px - 0.5 * $i;
+                margin: 0.2em;
+            } @else {
+                font-size: 26px - 0.5 * $i;
+                margin: 0.1em;
+            }
+      }}
+  }

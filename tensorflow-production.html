@@ -5,6 +5,8 @@
     <meta charset="utf-8" />
     <meta name="author" content="Andrie de Vries" />
     <meta name="date" content="2019-09-24" />
+    <link rel="icon" href="www/hex.png" type="image/x-icon">
+    
     <!-- Include jquery -->
     <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -16,16 +18,91 @@
      <!-- h1 heading on slides with class "toc" -->
     <script>
     $(document).ready(function() {
-      var headings = $( ":not(.toc-slide) > h2" );
-      var items = headings.map(
+      // Find h2 headings on subtitle-slide
+      var headings = $( ".remark-slides-area .remark-slide-content.subtitle-slide h2" );
+      var item = headings.map(
         function(){return $(this).text()}
         ).get()
-      items.shift(); // Ignore first element from title slide
-      items.pop();   // Ignore spurious last element
-      items.pop();
-      var item_list = items.join("</li><li>");
-      var toc = "<ul><li>" + item_list + "</li></ul>";
-      $(".toc-slide > h2").after(toc);
+      
+      // Find the actual subtitle slides
+      var subtitle_slides = $(".subtitle-slide > h2");
+      var subtitle_text = subtitle_slides.map(function(n){return $(this).text()}).get()
+    
+      var slide_number = $(".subtitle-slide .remark-slide-number");
+    
+      // add page numbers to toc_entries
+      var page = [];
+      for (i = 0; i < item.length; i++) {
+        // find the page number (e.g. "5 / 27" turns into "5")
+        page[i] = slide_number[i].innerText.replace(/ .*/, "");
+      }
+    
+    
+      // object to hold toc entries
+      window.toc_entries = {
+        item: item, 
+        page: page
+      };
+    
+    
+      // look up the previous (parent) toc entry for every page
+      window.lookup_toc_title = function(pg) {
+        for (var i = window.toc_entries.page.length; i >= 0; i--) {
+          if (pg == window.toc_entries.page[i]) {
+            return "";
+          }
+          if (pg >= window.toc_entries.page[i]) {
+            h = window.toc_entries.item[i];
+            p = window.toc_entries.page[i];
+            href = slides[0].baseURI.replace(/#\d*$/, "#" + p);
+            breadcrumb = "<a href='" + href + "''>" + h + "</a";
+            return breadcrumb;
+          }
+        }
+        return "";
+      }
+    
+    
+      // Construct TOC on each subtitle slide
+      subtitle_slides.each(function(n){
+        var text = "";
+        for (i = 0; i < item.length; i++) {
+          if (item[i] == subtitle_text[n]) {
+            text += "<div class='toc-active'><li>" + item[i] + "</li></div>";
+          } else {
+            // substitute into base URI (replace trailing "#1" with "#5")
+            var uri = slide_number[n].baseURI.replace(/#\d*$/, "#" + page[i]);
+            // construct link and href
+            text += "<li><a href=" + uri +">" + item[i] + "</a></li>";
+          }
+        }
+        // construct toc class
+        var toc_class = "toc-" + item.length + "-entries";
+        var toc = "<div class='table-of-contents " + toc_class + "'><ul>" + text + "</ul></div>";
+        // replace H2 with "Agenda"
+        // subtitle_slides.text(function(){return $(this).text().replace(/.*/, "Agenda")});
+        // insert toc after H2
+        $(this).after(toc);
+      })
+    
+    
+      // create breadcrumb with previous header
+      var slides = $( ".remark-slides-area .remark-slide-container .remark-slide-content" );
+      slides.each(function(n){
+        var previous_header = "<div class = 'breadcrumb-previous-header'>" + window.lookup_toc_title(n + 1) + "</div>";
+        $(this).append(previous_header);
+      })
+    
+      // Insert navigation buttons
+      slides.each(function(n){
+        var nav = 
+        "<div class = 'navigation-buttons navigation-buttons-first' onclick = 'slideshow.gotoFirstSlide();'>"    + "<<" + "</div>" +
+        "<div class = 'navigation-buttons navigation-buttons-prev'  onclick = 'slideshow.gotoPreviousSlide();'>" + "<"  + "</div>" +
+        "<div class = 'navigation-buttons navigation-buttons-next'  onclick = 'slideshow.gotoNextSlide();'>"     + ">"  + "</div>" +
+        "<div class = 'navigation-buttons navigation-buttons-last'  onclick = 'slideshow.gotoLastSlide();'>"     + ">>" + "</div>";
+        $(this).append(nav);
+      })
+    
       
     });
     </script>
@@ -43,21 +120,9 @@ class: center, middle, inverse, title-slide
 ---
 
 
-layout: true
-
-<div class="navigation-buttons navigation-buttons-first" onclick="slideshow.gotoFirstSlide();">&lt;&lt;</div><div class="navigation-buttons navigation-buttons-prev" onclick="slideshow.gotoPreviousSlide();">&lt;</div><div class="navigation-buttons navigation-buttons-next" onclick="slideshow.gotoNextSlide();">&gt;</div><div class="navigation-buttons navigation-buttons-last" onclick="slideshow.gotoLastSlide();">&gt;&gt;</div>
-
----
-
-class: title-slide, middle, center
 
 
 
-
-
-<h1>Deploying TensorFlow models and APIs to Production</h1><h2>Mango Solutions / RStudio, London</h2><h3>Andrie de Vries</h3><h3>2019-09-24</h3>
-
----
 
 ## Outline
 
@@ -73,7 +138,13 @@ Taking TensorFlow into Production
 
 ---
 
-## But first
+class: subtitle-slide
+
+## Follow along
+
+---
+
+### But first
 
 To follow along and try it yourself:
 
@@ -87,15 +158,10 @@ To follow along and try it yourself:
 
 ---
 
-class: toc-slide
 
-## Agenda
-    
----
+### Find the material
 
-## Find the material
 
-.larger[
 
 - Immunotherapy repo at:
 
@@ -104,12 +170,17 @@ class: toc-slide
 - This presentation at:
 
     - https://colorado.rstudio.com/rsc/tensorflow-production-mango/
-]
 
 ---
+
 class: subtitle-slide
 
 ## TensorFlow
+
+---
+
+### TensorFlow
+
 
 .center[
 &lt;img src="images/tensorflow-logo-large.png" height=500px;/&gt;
@@ -189,7 +260,7 @@ pep_encode("LLTDAQRIV")[1, , ] %&gt;% rasterImage()
 ```
 
 
-![](tensorflow-production_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+![](tensorflow-production_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
 
 
 ---
@@ -405,13 +476,14 @@ https://www.rplumber.io/
 
 
 ```r
-{{
 #* @apiTitle Immunotherapy
 
 #* Predict peptide class
-#* @param peptide Character vector with a single peptide, eg. `"LLTDAQRIV"` or comma separated, e.g. `"LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV, RQFTCMIAV"`
+#* @param peptide Character vector with a single peptide, eg. `LLTDAQRIV`
+#*   or comma separated, e.g. `LLTDAQRIV, LMAFYLYEV, VMSPITLPT, SLHLTNCFV,
+#*   RQFTCMIAV`
 #* @get /predict
-}}
+
 function(peptide, solo_url){
   if (missing(solo_url) || is.null(solo_url)) {
     solo_url &lt;- config::get("solo_url_tensorflow") # TensorFlow API
@@ -453,7 +525,9 @@ withr::with_dir(
 
 ### Your `plumber` API is available as swagger
 
-![](images/api_swagger.png)
+.center[
+&lt;img src="images/api_swagger.png" height=500px /&gt;
+]
 
 ---
 
@@ -624,7 +698,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     deleted = true;
   });
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {

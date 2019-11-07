@@ -3,17 +3,12 @@ $font_link: $font_text;
 $font_fixed: 'PT Mono';
 $rstudio_blue: #58A1D2;
 
+$font_size_h1: 3em;
+$font_size_h2: $font_size_h1 * 5/6;
+$font_size_h3: $font_size_h1 * 4/6;
+
 $header_colour: $rstudio_blue;
 
-
-// $item-color: white;
-// $rank-background-color: transparent;
-// $item-background-color: #f8f8f8;
-// $border-color: #ddd;
-// $item-dragging-color: #75aadb;
-// $item-hover-color: scale-color($item-dragging-color, $lightness: 75%);
-
-// $rank-list-min-flex-size: 200px;
-// $rank-list-min-height: 45px;
-
-// $border-radius: 3px;
+$link_colour: darken($rstudio_blue, 10%);
+$hover_colour: darken($link_colour, 10%);
+$hover_border_colour: darken($link_colour, 10%);

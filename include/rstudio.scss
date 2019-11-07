@@ -13,7 +13,7 @@ strong {
 }
 
 p {
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1.2;
   margin: 0.75em 0 0.25em 0;
 }
@@ -22,6 +22,8 @@ ul, ul p {
     line-height: 1.2em;
     margin: 0.25em 0 0.25em 0;
   }
+
+@import "toc";
   
 ul li, ul li p {
     font-size: 24px;
@@ -39,22 +41,28 @@ h1, h2, h3{
     font-weight: normal;
 }    
 
-h1 {
-    font-size: 64px;
-}    
+.remark-slide-content {
+  h1 {
+      font-size: $font_size_h1;
+  }    
 
-h2 {
-    font-size: 38px;
-}    
+  h2 {
+      font-size: $font_size_h2;
+  }    
 
-h3 {
-    font-size: 32px;
-}    
+  h3 {
+      font-size: $font_size_h3;
+  }    
+  h4 {
+    margin-bottom: 1em; 
+  }
+
+}
 
 a {
   font-family: $font_text;
   font-size: 90%;
-  color: #75AADB;
+  color: $link_colour;
   border-bottom: 0;
 }
 
@@ -65,8 +73,8 @@ a > code {
   }
 
 a:hover {
-    color: #2a7cdf !important;
-    border-bottom: 1px solid rgba(42, 124, 223, 0.5);
+    color: $hover_colour !important;
+    border-bottom: 1px solid $hover_border_colour;
 }
 
 
@@ -127,28 +135,48 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
   line-height: 1.2;
 }
 
+
 .remark-code, .remark-inline-code, .remark-code-line {
   font-family: 'PT Mono';
   background-color: #f8f8f8;
+  font-size: 90%
 }
 
-.remark-code{
+li {
+.remark-code, .remark-inline-code, .remark-code-line {
+  font-family: 'PT Mono';
+  background-color: #f8f8f8;
+  font-size: 90%
+}
+}
+
+code, .remark-code, .remark-inline-code {
   font-size:90%;
 }
-.remark-inline-code {
-  font-size: 80%;
-}
+
 
 .remark-code-line-highlighted {
   background-color: #fff;
 }
+
+.breadcrumb-previous-header {
+  top: 12px;
+  opacity: .9;
+  position: absolute;
+  right: 20px;
+  font-size: 15px;
+  a {
+    text-decoration: none;
+  }
+}
+
 
 .remark-slide-number {
   bottom: 12px;
   opacity: .9;
   position: absolute;
   right: 40px;
-  font-size: 10px;
+  font-size: 15px; 
 }
 
 /** Two-column layout **/
@@ -189,14 +217,43 @@ thead, tfoot, tr:nth-child(even) { background: #eee }
 small {
     font-size: 0.6em;
 }
-h4 {
-    margin-bottom: 15px; 
-}
 
 img {
     padding: 0.5em 0;
 }
+
+
+
+.small p {
+  font-size: 90%;
+}
+
+.smaller p {
+  font-size: 80%;
+}
+
+.smallest p {
+  font-size: 75%;
+}
+
+.large {
+  font-size: 110%;
+}
+
+.larger {
+  font-size: 120%;
+}
+
+.largest {
+  font-size: 150%;
+}
+
+.caption, .caption p {
+  font-size: 90%;
+}
+
   
   
 @import "_slides";
 @import "_navigation";
+@import "_asciinema";

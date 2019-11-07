@@ -41,6 +41,7 @@ slide types:
   
   h3 {
     font-size: 24px;
+    margin: 0.5em 0;
   }
   
   .remark-slide-number {
@@ -53,7 +54,7 @@ slide types:
   background-image: url('https://cdn.rstudio.com/pro-admin/template/panel-wide.png');
   padding-left: 360px;
   text-align: center;
-  vertical-align: middle;
+  // vertical-align: middle;
 }
 
 .toc-slide {

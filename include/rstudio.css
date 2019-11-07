@@ -10,7 +10,7 @@ strong {
 }
 
 p {
-  font-size: 24px;
+  font-size: 28px;
   line-height: 1.2;
   margin: 0.75em 0 0.25em 0;
 }
@@ -18,6 +18,132 @@ p {
 ul, ul p {
   line-height: 1.2em;
   margin: 0.25em 0 0.25em 0;
+}
+
+.table-of-contents {
+  padding: 25px 0px;
+}
+
+.table-of-contents ul {
+  list-style-type: none;
+}
+
+.table-of-contents ul li, .table-of-contents ul li p {
+  font-size: 1.5em;
+}
+
+.table-of-contents a {
+  font-family: "Source Sans Pro";
+  font-size: 100%;
+  color: grey;
+  text-decoration: none;
+}
+
+.table-of-contents .toc-active {
+  color: #58A1D2;
+  border-style: solid;
+  background-color: #eee;
+  border-radius: 7px;
+}
+
+.toc-1-entries ul li, .toc-1-entries ul li p {
+  font-size: 29.5px;
+  margin: 0.5em;
+}
+
+.toc-2-entries ul li, .toc-2-entries ul li p {
+  font-size: 29px;
+  margin: 0.5em;
+}
+
+.toc-3-entries ul li, .toc-3-entries ul li p {
+  font-size: 28.5px;
+  margin: 0.5em;
+}
+
+.toc-4-entries ul li, .toc-4-entries ul li p {
+  font-size: 28px;
+  margin: 0.5em;
+}
+
+.toc-5-entries ul li, .toc-5-entries ul li p {
+  font-size: 27.5px;
+  margin: 0.5em;
+}
+
+.toc-6-entries ul li, .toc-6-entries ul li p {
+  font-size: 27px;
+  margin: 0.3em;
+}
+
+.toc-7-entries ul li, .toc-7-entries ul li p {
+  font-size: 26.5px;
+  margin: 0.3em;
+}
+
+.toc-8-entries ul li, .toc-8-entries ul li p {
+  font-size: 26px;
+  margin: 0.3em;
+}
+
+.toc-9-entries ul li, .toc-9-entries ul li p {
+  font-size: 25.5px;
+  margin: 0.3em;
+}
+
+.toc-10-entries ul li, .toc-10-entries ul li p {
+  font-size: 25px;
+  margin: 0.3em;
+}
+
+.toc-11-entries ul li, .toc-11-entries ul li p {
+  font-size: 20.5px;
+  margin: 0.2em;
+}
+
+.toc-12-entries ul li, .toc-12-entries ul li p {
+  font-size: 20px;
+  margin: 0.2em;
+}
+
+.toc-13-entries ul li, .toc-13-entries ul li p {
+  font-size: 19.5px;
+  margin: 0.2em;
+}
+
+.toc-14-entries ul li, .toc-14-entries ul li p {
+  font-size: 19px;
+  margin: 0.2em;
+}
+
+.toc-15-entries ul li, .toc-15-entries ul li p {
+  font-size: 18.5px;
+  margin: 0.2em;
+}
+
+.toc-16-entries ul li, .toc-16-entries ul li p {
+  font-size: 18px;
+  margin: 0.1em;
+}
+
+.toc-17-entries ul li, .toc-17-entries ul li p {
+  font-size: 17.5px;
+  margin: 0.1em;
+}
+
+.toc-18-entries ul li, .toc-18-entries ul li p {
+  font-size: 17px;
+  margin: 0.1em;
+}
+
+.toc-19-entries ul li, .toc-19-entries ul li p {
+  font-size: 16.5px;
+  margin: 0.1em;
+}
+
+.toc-20-entries ul li, .toc-20-entries ul li p {
+  font-size: 16px;
+  margin: 0.1em;
 }
 
 ul li, ul li p {
@@ -36,22 +162,26 @@ h1, h2, h3 {
   font-weight: normal;
 }
 
-h1 {
-  font-size: 64px;
+.remark-slide-content h1 {
+  font-size: 3em;
 }
 
-h2 {
-  font-size: 38px;
+.remark-slide-content h2 {
+  font-size: 2.5em;
 }
 
-h3 {
-  font-size: 32px;
+.remark-slide-content h3 {
+  font-size: 2em;
+}
+
+.remark-slide-content h4 {
+  margin-bottom: 1em;
 }
 
 a {
   font-family: "Source Sans Pro";
   font-size: 90%;
-  color: #75AADB;
+  color: #3489c3;
   border-bottom: 0;
 }
 
@@ -62,8 +192,8 @@ a > code {
 }
 
 a:hover {
-  color: #2a7cdf !important;
-  border-bottom: 1px solid rgba(42, 124, 223, 0.5);
+  color: #2a6d9a !important;
+  border-bottom: 1px solid #2a6d9a;
 }
 
 q, blockquote {
@@ -131,18 +261,33 @@ thead, tfoot, tr:nth-child(even) {
 .remark-code, .remark-inline-code, .remark-code-line {
   font-family: 'PT Mono';
   background-color: #f8f8f8;
-}
-
-.remark-code {
   font-size: 90%;
 }
 
-.remark-inline-code {
-  font-size: 80%;
+li .remark-code, li .remark-inline-code, li .remark-code-line {
+  font-family: 'PT Mono';
+  background-color: #f8f8f8;
+  font-size: 90%;
+}
+
+code, .remark-code, .remark-inline-code {
+  font-size: 90%;
 }
 
 .remark-code-line-highlighted {
   background-color: #fff;
+}
+
+.breadcrumb-previous-header {
+  top: 12px;
+  opacity: .9;
+  position: absolute;
+  right: 20px;
+  font-size: 15px;
+}
+
+.breadcrumb-previous-header a {
+  text-decoration: none;
 }
 
 .remark-slide-number {
@@ -150,7 +295,7 @@ thead, tfoot, tr:nth-child(even) {
   opacity: .9;
   position: absolute;
   right: 40px;
-  font-size: 10px;
+  font-size: 15px;
 }
 
 /** Two-column layout **/
@@ -193,12 +338,36 @@ small {
   font-size: 0.6em;
 }
 
-h4 {
-  margin-bottom: 15px;
-}
-
 img {
   padding: 0.5em 0;
+}
+
+.small p {
+  font-size: 90%;
+}
+
+.smaller p {
+  font-size: 80%;
+}
+
+.smallest p {
+  font-size: 75%;
+}
+
+.large {
+  font-size: 110%;
+}
+
+.larger {
+  font-size: 120%;
+}
+
+.largest {
+  font-size: 150%;
+}
+
+.caption, .caption p {
+  font-size: 90%;
 }
 
 /**
@@ -241,6 +410,7 @@ slide types:
 
 .title-slide h3 {
   font-size: 24px;
+  margin: 0.5em 0;
 }
 
 .title-slide .remark-slide-number {
@@ -251,7 +421,6 @@ slide types:
   background-image: url("https://cdn.rstudio.com/pro-admin/template/panel-wide.png");
   padding-left: 360px;
   text-align: center;
-  vertical-align: middle;
 }
 
 .toc-slide {
@@ -335,5 +504,19 @@ slide types:
 
 .navigation-buttons-last {
   right: 110px;
+}
+
+.asciinema_player.html-widget {
+  height: 24em;
+  padding-bottom: 3em;
+}
+
+.asciinema-player-wrapper {
+  height: 24em;
+  background: #121314;
+}
+
+.asciinema-player {
+  height: 24em;
 }
 

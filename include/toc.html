@@ -1,3 +1,5 @@
+<link rel="icon" href="www/hex.png" type="image/x-icon">
+
 <!-- Include jquery -->
 <script
 src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -9,16 +11,91 @@ crossorigin="anonymous">
  <!-- h1 heading on slides with class "toc" -->
 <script>
 $(document).ready(function() {
-  var headings = $( ":not(.toc-slide) > h2" );
-  var items = headings.map(
+  // Find h2 headings on subtitle-slide
+  var headings = $( ".remark-slides-area .remark-slide-content.subtitle-slide h2" );
+  var item = headings.map(
     function(){return $(this).text()}
     ).get()
-  items.shift(); // Ignore first element from title slide
-  items.pop();   // Ignore spurious last element
-  items.pop();
-  var item_list = items.join("</li><li>");
-  var toc = "<ul><li>" + item_list + "</li></ul>";
-  $(".toc-slide > h2").after(toc);
+  
+  // Find the actual subtitle slides
+  var subtitle_slides = $(".subtitle-slide > h2");
+  var subtitle_text = subtitle_slides.map(function(n){return $(this).text()}).get()
+
+  var slide_number = $(".subtitle-slide .remark-slide-number");
+
+  // add page numbers to toc_entries
+  var page = [];
+  for (i = 0; i < item.length; i++) {
+    // find the page number (e.g. "5 / 27" turns into "5")
+    page[i] = slide_number[i].innerText.replace(/ .*/, "");
+  }
+
+
+  // object to hold toc entries
+  window.toc_entries = {
+    item: item, 
+    page: page
+  };
+
+
+  // look up the previous (parent) toc entry for every page
+  window.lookup_toc_title = function(pg) {
+    for (var i = window.toc_entries.page.length; i >= 0; i--) {
+      if (pg == window.toc_entries.page[i]) {
+        return "";
+      }
+      if (pg >= window.toc_entries.page[i]) {
+        h = window.toc_entries.item[i];
+        p = window.toc_entries.page[i];
+        href = slides[0].baseURI.replace(/#\d*$/, "#" + p);
+        breadcrumb = "<a href='" + href + "''>" + h + "</a";
+        return breadcrumb;
+      }
+    }
+    return "";
+  }
+
+
+  // Construct TOC on each subtitle slide
+  subtitle_slides.each(function(n){
+    var text = "";
+    for (i = 0; i < item.length; i++) {
+      if (item[i] == subtitle_text[n]) {
+        text += "<div class='toc-active'><li>" + item[i] + "</li></div>";
+      } else {
+        // substitute into base URI (replace trailing "#1" with "#5")
+        var uri = slide_number[n].baseURI.replace(/#\d*$/, "#" + page[i]);
+        // construct link and href
+        text += "<li><a href=" + uri +">" + item[i] + "</a></li>";
+      }
+    }
+    // construct toc class
+    var toc_class = "toc-" + item.length + "-entries";
+    var toc = "<div class='table-of-contents " + toc_class + "'><ul>" + text + "</ul></div>";
+    // replace H2 with "Agenda"
+    // subtitle_slides.text(function(){return $(this).text().replace(/.*/, "Agenda")});
+    // insert toc after H2
+    $(this).after(toc);
+  })
+
+
+  // create breadcrumb with previous header
+  var slides = $( ".remark-slides-area .remark-slide-container .remark-slide-content" );
+  slides.each(function(n){
+    var previous_header = "<div class = 'breadcrumb-previous-header'>" + window.lookup_toc_title(n + 1) + "</div>";
+    $(this).append(previous_header);
+  })
+
+  // Insert navigation buttons
+  slides.each(function(n){
+    var nav = 
+    "<div class = 'navigation-buttons navigation-buttons-first' onclick = 'slideshow.gotoFirstSlide();'>"    + "<<" + "</div>" +
+    "<div class = 'navigation-buttons navigation-buttons-prev'  onclick = 'slideshow.gotoPreviousSlide();'>" + "<"  + "</div>" +
+    "<div class = 'navigation-buttons navigation-buttons-next'  onclick = 'slideshow.gotoNextSlide();'>"     + ">"  + "</div>" +
+    "<div class = 'navigation-buttons navigation-buttons-last'  onclick = 'slideshow.gotoLastSlide();'>"     + ">>" + "</div>";
+    $(this).append(nav);
+  })
+
   
 });
 </script>
