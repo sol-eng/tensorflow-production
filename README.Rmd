@@ -31,6 +31,7 @@ You can find current and previous versions of this presentation at:
 
 Workshop        | Date       | URL
 --------------- | ---------- | -------------------------
-Mango Solutions | 2019-09-24 | https://colorado.rstudio.com/rsc/tensorflow-production-mango/
-EODA            | 2019-06-13 | https://colorado.rstudio.com/rsc/tensorflow-production-eoda/ 
 ThinkR          | 2019-06-06 | https://colorado.rstudio.com/rsc/tensorflow-production-thinkr/
+EODA            | 2019-06-13 | https://colorado.rstudio.com/rsc/tensorflow-production-eoda/ 
+Mango Solutions | 2019-09-24 | https://colorado.rstudio.com/rsc/tensorflow-production-mango/
+Aetna           | 2019-11-07 | https://colorado.rstudio.com/rsc/tensorflow-production-aetna

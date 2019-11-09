@@ -1,8 +1,8 @@
 ---
 title: "Deploying TensorFlow models and APIs to Production"
-subtitle: "Mango Solutions / RStudio, London"
+subtitle: "Aetna"
 author: "Andrie de Vries"
-date: "2019-09-24"
+date: "2019-11-07"
 output:  
   xaringan::moon_reader:
     lib_dir: libs
@@ -20,8 +20,8 @@ resource_files:
   - include
   - images
 params:
-  workshop_identifier: "mango"
-  presentation_url: "https://colorado.rstudio.com/rsc/tensorflow-production-mango/"
+  workshop_identifier: "aetna"
+  presentation_url: "https://colorado.rstudio.com/rsc/tensorflow-production-aetna/"
 ---
 
 
@@ -48,9 +48,13 @@ Taking TensorFlow into Production
 
 class: subtitle-slide
 
+exclude:true
+
 ## Follow along
 
 ---
+
+exclude:true
 
 ### But first
 
@@ -65,6 +69,8 @@ To follow along and try it yourself:
 * Instructions at https://github.com/sol-eng/classroom-getting-started
 
 ---
+
+exclude:true
 
 
 ### Find the material
@@ -212,7 +218,7 @@ plot_peptide("LLTDAQRIV")
 The machine learning task is quite simple, but also a good example of an extremely common modeling task:
 
 * Predict the class of an observation, based on some features of this observation
-* In the case of the peptides example, the observation is a text string, which is expanded into a 9x20 tensor, and the task is a ulti-class classification.
+* In the case of the peptides example, the observation is a text string, which is expanded into a 9x20 tensor, and the task is a multi-class classification.
 
 Many other problems are very similar, for example:
 
@@ -220,7 +226,9 @@ Many other problems are very similar, for example:
 * Multi-class classification of images
 * Preduction of customer churn (binary class)
 
-In the case of the peptides, the modeling task is very simple, allowing the focus on the overall production deployment process.  In many real-world situations the modeling task is likely to be much more complex.
+In the case of the peptides, the modeling task is very simple, allowing the focus on the overall production deployment process.
+
+In many real-world situations the modeling task is likely to be much more complex.
 
 ---
 
@@ -232,32 +240,30 @@ class: class: subtitle-slide
 
 ### Workflow: objective
 
-The objective:
 
-* Train a TensorFlow model
+1. Train a TensorFlow model
   - Given some input, predict the class
-  
-* Deploy the model to a production server
-* Get a prediction from the server
+1. Deploy the model to a production server
+1. Get a prediction from the server
 
----
 
-### Objective
-
-![](images/workflow_objective.png)
+<img src="images/workflow_objective.png" height=400px />)
 
 ---
 
 ### Training the model
 
-![](images/model_2.png)
-
+.center[
+<img src="images/model_2.png" height=500px />
+]
 
 ---
 
 ### Deployment
 
-![](images/workflow_deployment.png)
+.center[
+<img src="images/workflow_deployment.png" height=500px />
+]
 
 
 ---
@@ -267,8 +273,10 @@ class: panel-narrow-slide
 ### Deployment with RStudio Connect
 
 .center[
-<img src="images/rstudio-connect.png" height=400/>
+<img src="images/rstudio-connect.png" height=400px />
 ]
+
+
 
 
 ---
@@ -281,11 +289,16 @@ class: subtitle-slide
 
 ### Demo
 
+Steps:
+
 * Train a TensorFlow model
 * Deploy the model
 * Deploy an API to call the TensorFlow API
 * Consume the model
 
+Try it yourself: 
+
+https://github.com/sol-eng/immunotherapy
 
 ---
 
